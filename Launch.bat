@@ -519,11 +519,8 @@ for /f "tokens=1*" %%A in ('find "got matched" "Bin\log.txt" ^| find /V /C "Inte
 	set /a Webhookcount=%%~A-2
 	echo Webhooks triggered: !Webhookcount!
 )
-if "%_err%"=="yea" (
-	pause
-) ELSE (
-	timeout /t 2 /NOBREAK
-)
+echo Press any key to show log . . .
+pause >nul
 echo.[90m++
 type "Bin\Log.txt" | more /E
 echo.++[0m
