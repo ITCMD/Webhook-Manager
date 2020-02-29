@@ -41,7 +41,7 @@ if "%PID%"=="1" (
 	echo 1] Status [[92mRunning[47;30m]                                      
 )
 echo 2] Edit Parameters                                       
-echo 3] Edit Webhooks                                         
+echo 3] Edit Webhooks                                        
 if not "%PID%"=="1" set IFPID=45
 if not "%PID%"=="1" echo 4] [[91mEmergency Stop[47;30m]                                      
 if not "%PID%"=="1" echo 5] Run external test                                     
@@ -85,6 +85,7 @@ set ext=
 set extr=
 set extdummy=
 set web=
+set webd=
 set webr=
 set webdummy=
 color 0f
@@ -231,7 +232,7 @@ if "%web%"=="failed" (
 :NoWebTest
 echo =================================================================================
 pause
-if "%router%"==yes goto router
+if "%router%"=="yes" goto router
 goto menu
 
 
