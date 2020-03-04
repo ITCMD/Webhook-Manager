@@ -226,7 +226,7 @@ if "%web%"=="failed" (
 :NoWebTest
 echo =================================================================================
 pause
-if "%router%"==yes goto router
+if "%router%"=="yes" goto router
 goto menu
 
 
