@@ -10,8 +10,10 @@ timeout /t 2 /NOBREAK >nul
 cls
 type "Bin\Logo2.ascii"
 timeout /t 1 /NOBREAK >nul
+set WMver=1.0.1
+set update=No
+rem Set defaults and check if parameters are set
 set F=
-
 set verbose= -verbose
 set hooks=hooks.json
 set port=9444
@@ -20,6 +22,15 @@ set security=
 set HTTPSpem=
 if exist "Bin\Paramsfile.cmd" call "Bin\Paramsfile.cmd"
 set parameters=-hooks "%hooks%"%verbose% -port %port%%hot%%security%%HTTPSpem%
+rem Check for updates
+call "Bin\Winhttpjs.bat" "https://raw.githubusercontent.com/ITCMD/Webhook-Manager/master/version.latest" -saveto "%temp%\wbmngr.latest" >nul 2>nul
+if not "%errorlevel%"=="200" (
+	echo [91mCould not check for updates. Error %errorlevel%.
+	timeout /t 2 >nul
+	goto menu
+)
+find "{%WMver%}" "%temp%\wbmngr.latest" >nul
+if not "%errorlevel%"=="0" set update=Yes
 :menu
 call "Bin\CMDS.bat" /TS "Webhook.exe Log Window (DNC)"
 set PID=%errorlevel%
@@ -37,17 +48,28 @@ if "%PID%"=="1" (
 )
 echo 2] Edit Parameters                                       
 echo 3] Edit Webhooks                                          
+if "%update%"=="yes" set ifupdate
 if not "%PID%"=="1" set IFPID=45
 if not "%PID%"=="1" echo 4] [[91mEmergency Stop[47;30m]                                      
 if not "%PID%"=="1" echo 5] Run external test                                     
 echo ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 :menuloop
-choice /c 123q%IFPID% /n /t 15 /D q >nul
+choice /c 123qu%IFPID% /n /t 15 /D q >nul
 if %errorlevel%==1 goto interract
 if %errorlevel%==2 goto parameters 
 if %errorlevel%==3 goto edit
-if %errorlevel%==5 goto stop
-if %errorlevel%==6 goto exttest
+if %errorlevel%==5 goto update
+if %errorlevel%==6 goto stop
+if %errorlevel%==7 goto exttest
+
+:update
+cls
+if not "%update%"=="yes" (
+	echo [92mYou are already on the latest version.[0m
+	pause
+	goto menu
+)
+	
 
 call "Bin\CMDS.bat" /TS "Webhook.exe Log Window (DNC)"
 set nPID=%errorlevel%
@@ -226,7 +248,7 @@ if "%web%"=="failed" (
 :NoWebTest
 echo =================================================================================
 pause
-if "%router%"=="yes" goto router
+if "%router%"=="yesWeb" goto router
 goto menu
 
 
