@@ -1,0 +1,35 @@
+@echo off
+cd "%~1"
+echo [37mClosing any opne webhook instances . . .[0m
+taskkill /f /im "webhook.exe" >nul 2>nul
+echo [92mUpdating Webhook Manager.bat . . .[0m
+call "Bin\Winhttpjs.bat" "https://raw.githubusercontent.com/ITCMD/Webhook-Manager/master/Webhook%%20Manager.bat" -saveto "%cd%\Webhook Manager.bat" >nul
+echo [92mUpdating CMDS tool . . .[0m
+call "Bin\Winhttpjs.bat" "https://raw.githubusercontent.com/ITCMD/CMDS/master/CMDS.bat" -saveto "%cd%\Bin\CMDS.bat" >nul
+echo [92mUpdating DummyCommand.bat . . .[0m
+call "Bin\Winhttpjs.bat" "https://github.com/ITCMD/Webhook-Manager/raw/master/Bin/DummyCommand.bat" -saveto "%cd%\Bin\DummyCommand.bat" >nul
+echo [92mUpdating Example Webhooks.json . . .[0m
+call "Bin\Winhttpjs.bat" "https://github.com/ITCMD/Webhook-Manager/raw/master/Bin/Example%%20Webhooks.json" -saveto "%cd%\Bin\Example Webhooks.json" >nul
+echo [92mUpdating JSONedit tool . . .[0m
+call "Bin\Winhttpjs.bat" "https://github.com/ITCMD/Webhook-Manager/raw/master/Bin/JSONedit.exe" -saveto "%cd%\Bin\JSONedit.exe" >nul
+echo [92mUpdating JSONedit config . . .[0m
+call "Bin\Winhttpjs.bat" "https://github.com/ITCMD/Webhook-Manager/raw/master/Bin/JSONedit.cfg" -saveto "%cd%\Bin\JSONedit.cfg" >nul
+echo [92mUpdating Ascii Logos . . .[0m
+call "Bin\Winhttpjs.bat" "https://github.com/ITCMD/Webhook-Manager/raw/master/Bin/Logo1.ascii" -saveto "%cd%\Bin\Logo1.ascii" >nul
+call "Bin\Winhttpjs.bat" "https://github.com/ITCMD/Webhook-Manager/raw/master/Bin/Logo2.ascii" -saveto "%cd%\Bin\Logo2.ascii" >nul
+echo [92mUpdating Webhook.exe Launcher . . .[0m
+call "Bin\Winhttpjs.bat" "https://github.com/ITCMD/Webhook-Manager/raw/master/Bin/run.bat" -saveto "%cd%\Bin\run.bat" >nul
+echo [92mUpdating Webhook.exe . . .[0m
+call "Bin\Winhttpjs.bat" "https://github.com/ITCMD/Webhook-Manager/raw/master/Bin/webhook.exe" -saveto "%cd%\Bin\webhook.exe" >nul
+echo [92mUpdating tee.bat . . .[0m
+call "Bin\Winhttpjs.bat" "https://github.com/ITCMD/Webhook-Manager/raw/master/Bin/tee.bat" -saveto "%cd%\Bin\tee.bat" >nul
+echo [92m# Basic update complete. Updating Winhttpjs.bat . . .
+echo [37mDownloading update . . .[0m
+call "Bin\Winhttpjs.bat" "https://github.com/ITCMD/Webhook-Manager/raw/master/Bin/winhttpjs.bat" -saveto "%temp%\Winhtppjs.bat" >nul
+echo [37mInstalling update . . .[0m
+move /Y "%temp%\Winhttpjs.bat" "%cd%\Bin\Winhttpjs.bat"
+echo.
+echo.
+echo [92mUpdate complete.
+timeout /t 4 /NOBREAK >nul
+exit 

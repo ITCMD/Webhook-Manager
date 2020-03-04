@@ -29,8 +29,9 @@ if not "%errorlevel%"=="200" (
 	timeout /t 2 >nul
 	goto menu
 )
+set update=yes
 find "{%WMver%}" "%temp%\wbmngr.latest" >nul
-if not "%errorlevel%"=="0" set update=Yes
+if "%errorlevel%"=="0" set update=No
 :menu
 call "Bin\CMDS.bat" /TS "Webhook.exe Log Window (DNC)"
 set PID=%errorlevel%
@@ -42,16 +43,16 @@ echo.
 echo [47;30mWebmanager powered by Adnanh/webhook                     
 echo ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 if "%PID%"=="1" (
-	echo 1] Launch [[91mStopped[47;30m]                                      
+	echo 1] Launch [[31mStopped[47;30m]                                      
 ) ELSE (
 	echo 1] Status [[92mRunning[47;30m]                                      
 )
 echo 2] Edit Parameters                                       
-echo 3] Edit Webhooks                                          
-if "%update%"=="yes" set ifupdate
+echo 3] Edit Webhooks                                         
 if not "%PID%"=="1" set IFPID=45
 if not "%PID%"=="1" echo 4] [[91mEmergency Stop[47;30m]                                      
 if not "%PID%"=="1" echo 5] Run external test                                     
+if "%update%"=="yes" echo U] [31mDownload Update[47;30m                                       
 echo ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 :menuloop
 choice /c 123qu%IFPID% /n /t 15 /D q >nul
@@ -61,18 +62,6 @@ if %errorlevel%==3 goto edit
 if %errorlevel%==5 goto update
 if %errorlevel%==6 goto stop
 if %errorlevel%==7 goto exttest
-
-:update
-cls
-if not "%update%"=="yes" (
-	echo [92mYou are already on the latest version.[0m
-	pause
-	goto menu
-)
-
-
-
-
 call "Bin\CMDS.bat" /TS "Webhook.exe Log Window (DNC)"
 set nPID=%errorlevel%
 if not "%nPID%"=="%PID%" (
@@ -80,6 +69,32 @@ if not "%nPID%"=="%PID%" (
 	goto :menu2
 )
 goto :menuloop
+
+
+
+:update
+cls
+if not "%update%"=="yes" (
+	echo [92mYou are already on the latest version.[0m
+	pause
+	goto :menu
+)
+echo Downloading and running updator . . .
+call "Bin\Winhttpjs.bat" "https://raw.githubusercontent.com/ITCMD/Webhook-Manager/master/UpdateScript.latest" -saveto "%temp%\wbmngr.cmd" >nul 2>nul
+if not "%errorlevel%"=="200" (
+	echo Could not download updator script.
+	echo It is recommended that you install the latest release from
+	echo [96;4mhttps://github.com/ITCMD/Webhook-Manager/releases[0m
+	pause
+	goto menu
+)
+echo Running updator . . .
+"%temp%\wbmngr.cmd" "%cd%"
+echo [91mUpdate failed.[0m
+pause
+exit
+
+
 
 :edit
 cls
