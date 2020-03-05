@@ -1,0 +1,17 @@
+Thu 03/05/2020  9:11:52.60 
+[Started] 
+[webhook] 2020/03/05 09:11:52 version 2.6.11 starting
+[webhook] 2020/03/05 09:11:52 attempting to load hooks from hooks.json
+[webhook] 2020/03/05 09:11:52 found 1 hook(s) in file
+[webhook] 2020/03/05 09:11:52 	loaded: Internal-Ping
+[webhook] 2020/03/05 09:11:52 serving hooks on http://0.0.0.0:9444/hooks/{id}
+[webhook] 2020/03/05 09:12:05 [110326] incoming HTTP request from [::1]:49623
+[webhook] 2020/03/05 09:12:05 [110326] Internal-Ping got matched
+[webhook] 2020/03/05 09:12:05 [110326] error parsing body payload due to unsupported content type header: 
+[webhook] 2020/03/05 09:12:05 [110326] Internal-Ping hook triggered successfully
+[webhook] 2020/03/05 09:12:05 200 | 2.0022ms | localhost:9444 | GET /hooks/Internal-Ping 
+[webhook] 2020/03/05 09:12:05 [110326] executing DummyCommand.bat (DummyCommand.bat) with arguments ["DummyCommand.bat"] and environment [] using  as cwd
+[webhook] 2020/03/05 09:12:05 [110326] command output: Internal Web-Man test was recieved and responded.
+
+[webhook] 2020/03/05 09:12:05 [110326] finished handling Internal-Ping
+[Stopped by User]

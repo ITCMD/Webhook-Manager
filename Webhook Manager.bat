@@ -50,7 +50,7 @@ if "%PID%"=="1" (
 echo 2] Edit Parameters                                       
 echo 3] Edit Webhooks                                         
 if not "%PID%"=="1" set IFPID=45
-if not "%PID%"=="1" echo 4] [[91mEmergency Stop[47;30m]                                      
+if not "%PID%"=="1" echo 4] [31mEmergency Stop[47;30m                                        
 if not "%PID%"=="1" echo 5] Run external test                                     
 if "%update%"=="yes" echo U] [31mDownload Update[47;30m                                       
 echo ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -597,8 +597,28 @@ timeout /t 2 >nul
 find "unable" "Bin\log.txt"
 exit /b
 
+
+:nojson
+cls
+echo Could not start.
+echo You do not have any webhooks set.
+echo Go into parameter settings and set the
+echo path for your webhook file. Not sure where
+echo to start? Check out the example file and
+echo visit the github page for more info
+echo https://github.com/ITCMD/Webhook-Manager
+echo.
+pause
+goto menu
+
 :launch
 color 0f
+set hooker=%hooks:"=%
+if not exist "%hooker%" (
+	if not exist "Bin\%hooker%" (
+		goto nojson
+	)
+)
 cls
 echo [92mLaunching system . . .[0m
 echo %parameters%>"Bin\param.temp"

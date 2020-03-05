@@ -1,0 +1,7 @@
+[
+  {
+    "id": "Internal-Ping",
+    "response-message": "Pong OK.",
+	"execute-command": "DummyCommand.bat",
+  },
+]
