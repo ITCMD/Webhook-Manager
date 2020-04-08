@@ -391,7 +391,7 @@ if "%Hot%"=="" (
 	echo Hot Reload [auto apply]  [92mTrue[0m Press 5
 )
 echo.
-netsh firewall show state | find "%port%   TCP" >nul
+netsh firewall show state | find "%port%" >nul
 if not %errorlevel%==0 (
 	echo [41;97mWARNING:[40;91m Port %port% is not open. Press F to open in firewall.[0m
 	set F=F
