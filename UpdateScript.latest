@@ -4,7 +4,7 @@ echo [37mRunning in %~1
 echo Closing any opne webhook instances . . .[0m
 taskkill /f /im "webhook.exe" >nul 2>nul
 echo [92mUpdating Webhook Manager.bat . . .[0m
-call "Bin\Winhttpjs.bat" "https://raw.githubusercontent.com/ITCMD/Webhook-Manager/master/Webhook%%%%20Manager.bat" -saveto "%cd%\Webhook Manager.bat"
+call "Bin\Winhttpjs.bat" "https://raw.githubusercontent.com/ITCMD/Webhook-Manager/master/Webhook%%%%20Manager.bat" -saveto "%cd%\Webhook Manager.bat" >nul
 echo [92mUpdating CMDS tool . . .[0m
 call "Bin\Winhttpjs.bat" "https://raw.githubusercontent.com/ITCMD/CMDS/master/CMDS.bat" -saveto "%cd%\Bin\CMDS.bat" >nul
 echo [92mUpdating DummyCommand.bat . . .[0m
@@ -29,9 +29,9 @@ echo [37mDownloading update . . .[0m
 call "Bin\Winhttpjs.bat" "https://github.com/ITCMD/Webhook-Manager/raw/master/Bin/winhttpjs.bat" -saveto "%temp%\Winhttpjs.bat" >nul
 echo [37mInstalling update . . .[0m
 move /Y "%temp%\Winhttpjs.bat" "%cd%\Bin\Winhttpjs.bat" >nul
+echo [92mComplete[0m
 echo.
-echo.
-echo [92mUpdate complete.
+echo [92mUpdate complete.[0m
 pause
 timeout /t 4 /NOBREAK >nul
 exit 

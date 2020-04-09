@@ -33,6 +33,11 @@ set update=yes
 find "{%WMver%}" "%temp%\wbmngr.latest" >nul
 if "%errorlevel%"=="0" set update=No
 :menu
+if "%~1"=="/startup" goto :launch
+if exist "%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup\Webman.lnk" (
+	find "%~dpnx0" "%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup\Webman.lnk" >nul 2>nul
+	if !errorlevel!==0 set Startup=True
+)
 call "Bin\CMDS.bat" /TS "Webhook.exe Log Window (DNC)"
 set PID=%errorlevel%
 :menu2
@@ -49,19 +54,25 @@ if "%PID%"=="1" (
 )
 echo 2] Edit Parameters                                       
 echo 3] Edit Webhooks                                         
+if "%startup%"=="True" (
+	echo S] Launch on startup [[32mEnabled[47;30m]                           
+) ELSE (
+	echo S] Launch on startup [[31mNot Enabled[47;30m]                       
+)	
 if not "%PID%"=="1" set IFPID=45
 if not "%PID%"=="1" echo 4] [31mEmergency Stop[47;30m                                        
 if not "%PID%"=="1" echo 5] Run external test                                     
 if "%update%"=="yes" echo U] [31mDownload Update[47;30m                                       
 echo ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 :menuloop
-choice /c 123qu%IFPID% /n /t 15 /D q >nul
+choice /c 123quS%IFPID% /n /t 15 /D q >nul
 if %errorlevel%==1 goto interract
 if %errorlevel%==2 goto parameters 
 if %errorlevel%==3 goto edit
 if %errorlevel%==5 goto update
-if %errorlevel%==6 goto stop
-if %errorlevel%==7 goto exttest
+if %errorlevel%==6 goto startup
+if %errorlevel%==7 goto stop
+if %errorlevel%==8 goto exttest
 call "Bin\CMDS.bat" /TS "Webhook.exe Log Window (DNC)"
 set nPID=%errorlevel%
 if not "%nPID%"=="%PID%" (
@@ -69,6 +80,36 @@ if not "%nPID%"=="%PID%" (
 	goto :menu2
 )
 goto :menuloop
+
+
+:text
+echo %~2[%~1m%~3[0m%~4
+exit /b
+
+
+
+:startup
+if "%Startup%"=="True" (
+	del /f /q "%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup\Webman.lnk"
+	set Startup=
+	goto menu
+)
+cls
+echo Adding to startup . . .
+timeout /t 2 >nul
+@echo off
+echo Set oWS = WScript.CreateObject("WScript.Shell") > CreateShortcut.vbs
+echo sLinkFile = "%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup\Webman.lnk" >> CreateShortcut.vbs
+echo Set oLink = oWS.CreateShortcut(sLinkFile) >> CreateShortcut.vbs
+echo oLink.Arguments = "/startup" >>CreateShortcut.vbs
+echo oLink.WorkingDirectory = "%~dp0" >>CreateShortcut.vbs
+echo oLink.TargetPath = "%~dpnx0" >> CreateShortcut.vbs
+echo oLink.Save >> CreateShortcut.vbs
+cscript CreateShortcut.vbs >nul
+del CreateShortcut.vbs
+echo [92mDone![47;30m  
+pause
+goto menu
 
 
 
@@ -612,6 +653,7 @@ pause
 goto menu
 
 :launch
+if "%~1"=="/startup" SHIFT & set Startup=True
 color 0f
 set hooker=%hooks:"=%
 if not exist "%hooker%" (
@@ -628,8 +670,9 @@ type "Bin\Log.txt"
 find "[Stopped]" "Bin\Log.txt" >nul 2>nul
 if %errorlevel%==0 goto failed
 echo [97mStarted (no longer displaying log on this screen)[0m
-echo [90mRunning test in 8 seconds . . .[0m
-timeout /t 8 >nul 2>nul
+echo [90mRunning test in 5 seconds . . .[0m
+timeout /t 5 >nul 2>nul
+if exist "Bin\dummy.temp" del /f /q "Bin\dummy.temp"
 if "%secure%"=="" (
 	call "Bin\Winhttpjs.bat" "http://localhost:%port%/hooks/Internal-Ping" >nul 2>nul
 ) ELSE (
