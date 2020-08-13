@@ -1,0 +1,31 @@
+[
+{
+"id": "example-launcher",
+"execute-command": "example.bat",
+"command-working-directory": "G:\\Example\\Path\\To\\Files\\Folder",
+"response-message": "Example Triggered.",
+},
+{
+"id": "PassToBatch",
+"execute-command": "example.bat",
+"command-working-directory": "G:\\Example\\Path\\To\\Files\\Folder",
+"response-message": "Passed Parameter.",
+"pass-arguments-to-command": [
+{
+"source": "url",
+"name": "parameter",
+},
+],
+},
+{
+"id": "Internal-Ping",
+"response-message": "Pong OK.",
+"execute-command": "DummyCommand.bat",
+},
+{
+"id": "chrome",
+"execute-command": "chrome.exe",
+"command-working-directory": "\\Program Files (x86)\\Google\\Chrome\\Application\\",
+"response-message": "hi there",
+},
+]

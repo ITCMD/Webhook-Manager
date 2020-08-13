@@ -3,14 +3,11 @@ setlocal EnableDelayedExpansion
 if "%~1"=="firewall_admin" goto :preapplyfirewall
 mode con:cols=122 lines=35
 title Web Manager by SetLucas
-cls
 color 0f
-type "Bin\Logo1.ascii"
-timeout /t 2 /NOBREAK >nul
 cls
-type "Bin\Logo2.ascii"
+type "Bin\Logo1.ascii"
 timeout /t 1 /NOBREAK >nul
-set WMver=1.0.1
+set WMver=1.8.4
 set update=No
 rem Set defaults and check if parameters are set
 set F=
@@ -43,7 +40,7 @@ set PID=%errorlevel%
 :menu2
 color 07
 cls
-type "Bin\Logo2.ascii"
+type "Bin\Logo1.ascii"
 echo.
 echo [47;30mWebmanager powered by Adnanh/webhook                     
 echo ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -60,7 +57,7 @@ if "%startup%"=="True" (
 	echo S] Launch on startup [[31mNot Enabled[47;30m]                       
 )	
 if not "%PID%"=="1" set IFPID=45
-if not "%PID%"=="1" echo 4] [31mEmergency Stop[47;30m                                        
+if not "%PID%"=="1" echo 4] [31mStop Webhooks[47;30m                                        
 if not "%PID%"=="1" echo 5] Run external test                                     
 if "%update%"=="yes" echo U] [31mDownload Update[47;30m                                       
 echo ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -136,23 +133,16 @@ pause
 exit
 
 
-
 :edit
-cls
-echo Would you like to open the json file guide?
-choice /c YN
-if %errorlevel%==1 (
-	start https://github.com/adnanh/webhook/blob/master/docs/Hook-Examples.md
-	start https://github.com/adnanh/webhook/blob/master/docs/Hook-Definition.md
+pushd Bin
+if not exist Editor.bat (
+	echo Editor was not found. Make sure you are up to date!
+	popd
+	pause
+	goto menu
 )
-echo Opening file . . .
-echo [92mPlease ignore initial error message.[0m
-if exist "Bin\%Hooks%" (
-	start "" "Bin\JSONedit.exe" "Bin\%Hooks%"
-) ELSE (
-	start "" "Bin\JSONedit.exe" "%Hooks%"
-)
-timeout /t 3 >nul
+call "Editor.bat" "%hooks%"
+popd
 goto menu
 
 :exttest
@@ -662,6 +652,11 @@ if not exist "%hooker%" (
 	)
 )
 cls
+find "Internal-Ping" "%hooker%" >nul 2>nul
+if not "%errorlevel%"=="0" (
+	echo [41;97mWARNING:[40;91m Could not find Internal-Ping in webhooks file.
+	echo This may cause the system to fail.
+)
 echo [92mLaunching system . . .[0m
 echo %parameters%>"Bin\param.temp"
 start /MIN "" "Bin\Run.bat"
