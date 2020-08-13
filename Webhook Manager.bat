@@ -642,6 +642,8 @@ echo.
 pause
 goto menu
 
+Rem this is here because batch is stupid and cant find launch without it
+
 :launch
 if "%~1"=="/startup" SHIFT & set Startup=True
 color 0f
