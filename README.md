@@ -1,7 +1,7 @@
 # Webhook Manager
 A tool written in batch that allows you to host webhooks on a Windows machine, and, when they are triggered, run a customizable task.
 
-![Main Menu Running](https://i.imgur.com/PeLFxDS.jpg)
+![Main Menu Running](https://i.imgur.com/T9mpHTS.png)
 
 ![Main Menu Stopped](https://i.imgur.com/UIGZ4nu.jpg)
 
