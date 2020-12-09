@@ -28,7 +28,7 @@ call "Bin\Winhttpjs.bat" "https://github.com/ITCMD/Webhook-Manager/raw/master/Bi
 echo [37mInstalling update . . .[0m
 move /Y "%temp%\Winhttpjs.bat" "%cd%\Bin\Winhttpjs.bat" >nul
 echo [92mComplete[0m
-echo.
+echo. 
 echo [92mUpdate complete.[0m
 pause
 timeout /t 4 /NOBREAK >nul
