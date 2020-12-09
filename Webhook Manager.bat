@@ -7,7 +7,7 @@ color 0f
 cls
 type "Bin\Logo1.ascii"
 timeout /t 1 /NOBREAK >nul
-set WMver=1.8.4
+set WMver=1.8.5
 set update=No
 rem Set defaults and check if parameters are set
 set F=
@@ -37,6 +37,18 @@ if exist "%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup\Webman.lnk" (
 )
 call "Bin\CMDS.bat" /TS "Webhook.exe Log Window (DNC)"
 set PID=%errorlevel%
+tasklist | find /i "webhook.exe" >nul 2>nul
+if %errorlevel%==0 (
+	if "%PID%"=="1" (
+		call :error nolog
+	)
+) ELSE (
+	if not "%PID%"=="1" (
+		call :error nowbh
+	)
+)
+set handlednoweb=false
+set handlednolog=false
 :menu2
 color 07
 cls
@@ -57,7 +69,7 @@ if "%startup%"=="True" (
 	echo S] Launch on startup [[31mNot Enabled[47;30m]                       
 )	
 if not "%PID%"=="1" set IFPID=45
-if not "%PID%"=="1" echo 4] [31mStop Webhooks[47;30m                                        
+if not "%PID%"=="1" echo 4] [31mStop Webhooks[47;30m                                         
 if not "%PID%"=="1" echo 5] Run external test                                     
 if "%update%"=="yes" echo U] [31mDownload Update[47;30m                                       
 echo ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -77,6 +89,111 @@ if not "%nPID%"=="%PID%" (
 	goto :menu2
 )
 goto :menuloop
+
+
+
+
+:error
+if "%~1"=="nolog" goto nologerror
+if "%handlednoweb%"=="true" goto noweb_fail
+cls
+echo [91mERROR DETECTED[0m
+echo.
+echo The Webhook Manager log window is running,
+echo however the Webhook.exe service is not running.
+echo.
+echo Please note that if you have any other programs with
+echo a service name "webhook.exe" the programs will interfere
+echo with each other when webhook manager is running. If you
+echo don't understand what this means it is likely not an issue.
+echo.
+echo Did you just attempt to stop the Webhooks program?
+choice
+if %errorlevel%==1 (
+	echo.
+	echo Resolving issue by closing the log window.
+	call CMDS /tk "Webhook.exe Log Window (DNC)"
+	pause
+	set handlednoweb=true
+	goto menu
+) ELSE (
+	echo.
+	echo The Webhook.exe service may have crashed.
+	echo If this was expected, you may continue and
+	echo ignore this message. Otherwise, you should
+	echo inspect the log file and see if an error
+	echo occurred internally.
+	echo.
+	echo Ending issue by closing log window now
+	call CMDS /tk "Webhook.exe Log Window (DNC)"
+	echo.
+	echo Would you like to open the log file now?
+	choice
+	if !errorlevel!==1 start "" "log.txt"
+	set handlednoweb=true
+	goto menu
+)
+
+:nologerror
+if "%handlednolog%"=="true" goto nolog_fail
+taskkill /f /im webhook.exe
+set handlednolog=true
+goto menu
+
+:noweb_fail
+cls
+echo [91mERROR DETECTED[0m
+echo.
+echo The Webhook Manager log window is running,
+echo however the Webhook.exe service is not running.
+echo.
+echo It appears the system just detected this issue a
+echo moment ago but was unable to resolve it.
+echo.
+echo This indicates an issue with this program or an
+echo issue with system permissions. If you do not know
+echo what could be causing permission issues it is
+echo likely the former.
+echo.
+echo.
+echo Please submit the bin\log.txt file and an explain
+echo the issue on https://github.com/ITCMD/CMDS/issues
+echo for further assistance.
+pause
+exit
+
+:nolog_fail
+cls
+echo [91mERROR DETECTED[0m
+echo.
+echo The Webhook service is running, however the log
+echo window (normally minimized) is not running.
+echo.
+echo The system recently detected this issue and
+echo attempted to resolve it but could not.
+echo.
+echo This implies that you attempted to close the
+echo webhook program but the system could not complete
+echo this action.
+echo.
+echo This is likely a permissions issue or a Windows
+echo system error.
+echo.
+echo Please note that [93mThe service is still running
+echo and will therefor still accept webhook requests until
+echo the task webhook.exe is closed.[0m
+echo.
+echo If you are not sure how to end the task, restarting
+echo your machine should resolve the issue. If this issue
+echo continues to happen frequently, please submit your
+echo Bin\log.txt file and an explaination to the page
+echo https://github.com/ITCMD/CMDS/issues for further
+echo assistance. Thank you for your patience.
+pause
+pause
+exit
+
+
 
 
 :text
@@ -147,10 +264,12 @@ goto menu
 
 :exttest
 set ext=
+set extPORT=
 set extr=
 set extdummy=
 set web=
 set webr=
+set webd=
 set webdummy=
 color 0f
 cls
@@ -611,7 +730,7 @@ echo [91mConfirm immediate stop of webhook program (Y/N)
 choice
 if %errorlevel%==2 goto menu
 echo [91mStopping Webhooks . . .[0m
-taskkill /F /PID %PID%
+CMDS /TK "Webhook.exe Log Window (DNC)"
 taskkill /F /im webhook.exe
 echo [Stopped by User]>>"Bin\Log.txt"
 call :stopped

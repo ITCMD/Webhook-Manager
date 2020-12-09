@@ -79,6 +79,7 @@ if not exist "%file%" (
 	choice
 	if !errorlevel!==2 goto tompen
 )
+set file=%file:\=\\%
 echo Compiling code . . .
 If Not Exist "%hooks%" Exit /B
 copy /Y "%hooks%" "hooks.bak" >nul
