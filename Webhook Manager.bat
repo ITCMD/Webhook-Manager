@@ -7,7 +7,7 @@ color 0f
 cls
 type "Bin\Logo1.ascii"
 timeout /t 1 /NOBREAK >nul
-set WMver=1.8.5
+set WMver=1.8.6
 set update=No
 rem Set defaults and check if parameters are set
 set F=
