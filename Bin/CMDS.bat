@@ -160,7 +160,7 @@ set num=0
 :tkloop
 set /a num+=1
 if "!Title%num%!"=="Window Title: %_ts%" goto isritetk
-if %num%==%totalnum% goto nonetk
+if %num%==%totalnum% exit /b 1
 goto tkloop
 :isritetk
 ::window was found
