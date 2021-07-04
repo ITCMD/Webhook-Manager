@@ -131,7 +131,7 @@ This Chunk does something very similar. However, this webhook also accepts param
 
 **The `Internal-Ping` webhook MUST be included in any webhook json file you use (where you create the webhooks) or the Webhook-Manager program will not work properly.** This is because the Webhook Manager tool tests its status by using the internal-ping webhook.
 
-Don't worry, the included editor wont let you 
+Don't worry, the included editor wont let you remove it, so unless youre editing the code you should be okay.
 
 ***
 
