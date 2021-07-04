@@ -7,7 +7,7 @@ color 0f
 cls
 type "Bin\Logo1.ascii"
 timeout /t 1 /NOBREAK >nul
-set WMver=1.8.7
+set WMver=1.8.8
 set update=No
 rem Set defaults and check if parameters are set
 set F=
@@ -54,7 +54,7 @@ color 07
 cls
 type "Bin\Logo1.ascii"
 echo.
-echo [47;30mWebhook manager powered by Adnanh/webhook                     
+echo [47;30mWebhook manager powered by Adnanh/webhook                
 echo ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 if "%PID%"=="1" (
 	echo 1] Launch [[31mStopped[47;30m]                                      
@@ -107,12 +107,22 @@ echo a service name "webhook.exe" the programs will interfere
 echo with each other when webhook manager is running. If you
 echo don't understand what this means it is likely not an issue.
 echo.
+echo This error can also occur if webhook.exe took a second to stop.
+echo This is common on low-spec machines. If this is the case,
+echo simply press [Y] and go on with your life.
+echo.
 echo Did you just attempt to stop the Webhooks program?
 choice
 if %errorlevel%==1 (
 	echo.
 	echo Resolving issue by closing the log window.
-	call CMDS /tk "Webhook.exe Log Window (DNC)"
+	if exist "Bin\pid.out" (
+		set /p pidtk=<Bin\pid.out
+		taskkill /f /pid !pidtk!
+		del /f /im Bin\pid.out
+	) ELSE (
+		call CMDS /tk "Webhook.exe Log Window (DNC)"
+	)
 	pause
 	set handlednoweb=true
 	goto menu
@@ -730,8 +740,12 @@ echo [91mConfirm immediate stop of webhook program (Y/N)
 choice
 if %errorlevel%==2 goto menu
 echo [91mStopping Webhooks . . .[0m
-CMDS /TK "Webhook.exe Log Window (DNC)"
+if exist "Bin\pid.out" (
+	set /p pidtk=<Bin\pid.out
+	taskkill /f /pid !pidtk!
+)
 taskkill /F /im webhook.exe
+CMDS /TK "Webhook.exe Log Window (DNC)"
 echo [Stopped by User]>>"Bin\Log.txt"
 call :stopped
 pause
