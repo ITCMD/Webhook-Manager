@@ -740,12 +740,8 @@ echo [91mConfirm immediate stop of webhook program (Y/N)
 choice
 if %errorlevel%==2 goto menu
 echo [91mStopping Webhooks . . .[0m
-if exist "Bin\pid.out" (
-	set /p pidtk=<Bin\pid.out
-	taskkill /f /pid !pidtk!
-)
 taskkill /F /im webhook.exe
-CMDS /TK "Webhook.exe Log Window (DNC)"
+call CMDS /TK "Webhook.exe Log Window (DNC)"
 echo [Stopped by User]>>"Bin\Log.txt"
 call :stopped
 pause
