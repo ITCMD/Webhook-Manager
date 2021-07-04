@@ -2,7 +2,7 @@
 setlocal EnableDelayedExpansion
 if "%~1"=="firewall_admin" goto :preapplyfirewall
 mode con:cols=122 lines=35
-title Web Manager by SetLucas
+title Webhook Manager by SetLucas
 color 0f
 cls
 type "Bin\Logo1.ascii"
@@ -54,7 +54,7 @@ color 07
 cls
 type "Bin\Logo1.ascii"
 echo.
-echo [47;30mWebmanager powered by Adnanh/webhook                     
+echo [47;30mWebhook manager powered by Adnanh/webhook                     
 echo ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 if "%PID%"=="1" (
 	echo 1] Launch [[31mStopped[47;30m]                                      
@@ -623,7 +623,7 @@ pause >nul
 goto :parameters
 :--------------------------------------    
 :preapplyfirewall
-title Web Manager by ITCMd (Rule Applier)
+title Webhook Manager by ITCMD (Rule Applier)
 set /p cdd=<"%temp%\webmancd.data"
 for /f "tokens=*" %%A in ('echo %cdd%') do (
 	if not "%%~dA"=="%systemdrive%" (%%~dA)
